@@ -161,9 +161,9 @@ if __name__ == "__main__":
     setup_logger("warn")
     
     args = parser.parse_args()
+
     # Load manipulation config file
     manip_config_data = load_yaml(join_path(get_manip_configs_path(), args.manip_cfg_file))
-
     world_generator = get_world_config_dataloader(manip_config_data['world'], args.parallel_world)
     
     if args.save_folder is not None:
@@ -173,6 +173,7 @@ if __name__ == "__main__":
     else:
         save_folder = os.path.join(args.manip_cfg_file[:-4], datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S"), 'graspdata')
     
+    # the helper to save results
     save_helper = SaveHelper(
                     robot_file=manip_config_data['robot_file'],
                     save_folder=save_folder,
@@ -181,6 +182,8 @@ if __name__ == "__main__":
                 )
     tst = time.time()
     grasp_solver = None
+    
+    # Iterate through the each world config to generate grasp solutions
     for world_info_dict in world_generator:
         sst = time.time()
         if args.skip and save_helper.exist_piece(world_info_dict['save_prefix']):
@@ -188,6 +191,7 @@ if __name__ == "__main__":
             continue
         
         if grasp_solver is None:
+            # get the grasp config from the world config and manip config
             grasp_config = GraspSolverConfig.load_from_robot_config(
                         world_model=world_info_dict['world_cfg'],
                         manip_name_list=world_info_dict['manip_name'],
