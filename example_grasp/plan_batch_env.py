@@ -94,7 +94,7 @@ def process_grasp_result(result, save_debug, save_data, save_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-
+    # Manipulation Config file 
     parser.add_argument(
         "-c",
         "--manip_cfg_file",
@@ -102,7 +102,7 @@ if __name__ == "__main__":
         default='fc_leap.yml',
         help="config file path",
     )
-    
+    # Save folder path
     parser.add_argument(
         "-f",
         "--save_folder",
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         default=None,
         help="If None, use join_path(manip_cfg_file[:-4], $TIME) as save_folder",
     )
-    
+    # data save format
     parser.add_argument(
         "-m",
         "--save_mode",
@@ -118,7 +118,7 @@ if __name__ == "__main__":
         default='npy',
         help="Method to save results",
     )
-    
+    # which results to save
     parser.add_argument(
         "-d",
         "--save_data",
@@ -126,7 +126,7 @@ if __name__ == "__main__":
         default='final_and_mid',
         help="Which results to save",
     )
-    
+    # which results id to save
     parser.add_argument(
         "-i",
         "--save_id",
@@ -135,14 +135,14 @@ if __name__ == "__main__":
         default=None,
         help="Which results to save",
     )
-    
+    # if save contact normal for debug
     parser.add_argument(
         "-debug",
         "--save_debug",
         action='store_true',
         help="Which to save contact normal for debug",
     )
-    
+    # parallel world num for batch env
     parser.add_argument(
         "-w",
         "--parallel_world",
@@ -150,7 +150,7 @@ if __name__ == "__main__":
         default=20,
         help="parallel world num.",
     )
-    
+    # skip existing files
     parser.add_argument(
         "-k",
         "--skip",
@@ -161,6 +161,7 @@ if __name__ == "__main__":
     setup_logger("warn")
     
     args = parser.parse_args()
+    # Load manipulation config file
     manip_config_data = load_yaml(join_path(get_manip_configs_path(), args.manip_cfg_file))
 
     world_generator = get_world_config_dataloader(manip_config_data['world'], args.parallel_world)
